@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: spring-plus
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/plus
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1222
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+logging:
+  level:
+    org.hibernate.type: trace
+
+jwt:
+  secret:
+    key: "PI1v50JKao5QZoxY3J3KpUWavk1y9AKcih3SAoofZ/4="
