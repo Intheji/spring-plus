@@ -19,6 +19,7 @@ import java.io.IOException;
 public class JwtFilter implements Filter {
 
     private final JwtUtil jwtUtil;
+    private static final String[] PUBLIC_PATH_PREFIXES = {"/auth", "/actuator"};
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -32,7 +33,7 @@ public class JwtFilter implements Filter {
 
         String url = httpRequest.getRequestURI();
 
-        if (url.startsWith("/auth")) {
+        if (isPublicPath(url)) {
             chain.doFilter(request, response);
             return;
         }
@@ -91,5 +92,14 @@ public class JwtFilter implements Filter {
     @Override
     public void destroy() {
         Filter.super.destroy();
+    }
+
+    private boolean isPublicPath(String url) {
+        for (String prefix : PUBLIC_PATH_PREFIXES) {
+            if (url.startsWith(prefix)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

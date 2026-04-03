@@ -23,3 +23,15 @@ logging:
 jwt:
   secret:
     key: "PI1v50JKao5QZoxY3J3KpUWavk1y9AKcih3SAoofZ/4="
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+    tags:
+      application: ${spring.application.name:my-app}
