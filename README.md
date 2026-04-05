@@ -1,7 +1,7 @@
 # 🌱 Spring Plus
 
 > 스프링 심화 학습 과제를 수행하며 `spring-plus` 프로젝트를 개선한 기록입니다.  
-> 기능 구현부터 테스트, 보안, 쿼리 최적화, 대용량 데이터 처리, AWS 활용까지 단계적으로 적용했습니다 ✨
+> 기능 구현부터 테스트, 보안, 쿼리 최적화, 대용량 데이터 처리, AWS 활용까지 단계적으로 적용했습니다.
 
 <br/>
 
@@ -305,51 +305,100 @@ Connection is read-only. Queries leading to data modification are not allowed
 
 ### 12-1. EC2
 
-#### 적용 예정 / 적용 내용
-- [ ] EC2 인스턴스 생성
-- [ ] Elastic IP 연결
-- [ ] 애플리케이션 배포
-- [ ] Health Check API 구현
+#### 적용 내용
+- EC2 인스턴스를 생성하고 애플리케이션을 배포
+- Elastic IP를 연결하여 고정된 주소로 외부 접속이 가능하도록 구성
+- Spring Boot Actuator를 활용하여 health check API를 외부에 공개
 
 #### 배포 정보
-- EC2 Public IP: `{작성 예정}`
-- Health Check API: `{작성 예정}`
+- EC2 Public IP: `3.35.187.16`
+- Health Check API: `http://3.35.187.16:8080/actuator/health`
 
-#### 첨부 예정
-- [ ] EC2 인스턴스 화면
-- [ ] 보안 그룹 설정 화면
-- [ ] 애플리케이션 실행 화면
+#### 첨부
+<details>
+<summary>EC2 관련 이미지 보기</summary>
+
+#### 1. EC2 인스턴스 생성 화면
+<img width="1796" height="995" alt="image" src="https://github.com/user-attachments/assets/f37e6cca-e098-4d67-b3a6-e4b1d031ffd4" />
+
+#### 2. EC2 보안 그룹 설정 화면
+<img width="1882" height="853" alt="image" src="https://github.com/user-attachments/assets/1023cfae-a7cc-4555-a600-be7cdc1df56f" />
+
+#### 3. Elastic IP 연결 화면
+<img width="1882" height="621" alt="image" src="https://github.com/user-attachments/assets/849bf96d-4431-44fe-b448-299e108869f0" />
+
+#### 4. Health Check 응답 화면
+<img width="653" height="259" alt="image" src="https://github.com/user-attachments/assets/81bc97c4-1f27-449b-a6de-a15374bcac44" />
+
+</details>
 
 ### 12-2. RDS
 
-#### 적용 예정 / 적용 내용
-- [ ] RDS 생성
-- [ ] EC2와 연결
-- [ ] 애플리케이션 DB 연동
+#### 적용 내용
+- MySQL 기반 RDS 인스턴스를 생성
+- EC2와 동일한 VPC 내에서 연결되도록 구성
+- RDS 보안 그룹에서 EC2 보안 그룹만 접근할 수 있도록 설정하여 DB 접근 대상을 제한
+- 애플리케이션의 datasource를 RDS 엔드포인트 기반으로 변경하여 실제 DB와 연동
 
 #### 배포 정보
-- DB 엔드포인트: `{작성 예정}`
-- DB 종류: MySQL
+- DB 엔드포인트: `spring-plus.cfku2cs2woku.ap-northeast-2.rds.amazonaws.com`
+- DB 종류: `MySQL`
+- DB 이름: `plus`
 
-#### 첨부 예정
-- [ ] RDS 인스턴스 화면
-- [ ] 보안 그룹 설정 화면
-- [ ] 연결 확인 화면
+#### 첨부
+<details>
+<summary>RDS 관련 이미지 보기</summary>
+
+#### 1. RDS 인스턴스 생성 화면
+<img width="1767" height="307" alt="image" src="https://github.com/user-attachments/assets/11dc1a68-bab5-4327-90a1-c4172c403ac9" />
+
+#### 2. RDS 보안 그룹 설정 화면
+<img width="2456" height="809" alt="image" src="https://github.com/user-attachments/assets/eee8f264-703e-4559-858a-dc1fb3d3a619" />
+
+#### 3. EC2-RDS 연결 정보 화면
+<img width="1764" height="776" alt="image" src="https://github.com/user-attachments/assets/3653fc17-8a27-47cf-8124-10345706db85" />
+
+</details>
 
 ### 12-3. S3
 
-#### 적용 예정 / 적용 내용
-- [ ] S3 버킷 생성
-- [ ] 프로필 이미지 업로드 API 구현
-- [ ] 필요 시 Presigned URL 적용
+#### 적용 내용
+- S3 버킷을 생성하여 프로필 이미지 업로드 기능을 구현
+- 업로드된 파일은 `profile/UUID.확장자` 형식의 key로 저장되도록 구성
+- 버킷을 퍼블릭으로 공개하지 않고 Presigned URL을 발급하여 일정 시간 동안만 파일 접근이 가능하도록 구현
+- Presigned URL 만료 시간은 5일로 설정
+
+#### API 정보
+- 업로드 API: `POST /users/profile-image`
+- 인증 방식: JWT Bearer Token 필요
 
 #### 버킷 정보
-- Bucket Name: `{작성 예정}`
+- Bucket Name: `spring-plus-profile-155326049459-ap-northeast-2-an`
 
-#### 첨부 예정
-- [ ] 버킷 생성 화면
-- [ ] 권한 설정 화면
-- [ ] 업로드 결과 화면
+#### 업로드 결과 예시
+- 업로드 후 Presigned URL을 응답으로 반환
+- 예시 응답: [Presigned URL 바로가기](https://spring-plus-profile-155326049459-ap-northeast-2-an.s3.ap-northeast-2.amazonaws.com/profile/9c7810b4-1b79-4f46-9270-605d092cb9c1.webp?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260405T165844Z&X-Amz-SignedHeaders=host&X-Amz-Credential=AKIASIKRHNSZ22WNON5M%2F20260405%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Expires=432000&X-Amz-Signature=97714fd504911a0db31c1505906e09650a238252bc2946d8670512f5ac9765e3)
+
+
+<details>
+<summary>S3 관련 이미지 보기</summary>
+
+#### 1. S3 버킷 생성 화면
+<img width="1672" height="469" alt="image" src="https://github.com/user-attachments/assets/a5128d21-6c38-4df0-8430-2259ec9e1bbf" />
+
+#### 2. S3 권한 설정 화면
+<img width="2450" height="709" alt="image" src="https://github.com/user-attachments/assets/dabf6774-52f8-49e7-a6c3-b197aaeec701" />
+
+#### 3. 업로드 API 성공 응답 화면
+<img width="1199" height="582" alt="image" src="https://github.com/user-attachments/assets/41a33d3e-efe1-4ee6-9612-289d8004e193" />
+
+#### 4. S3 객체 저장 화면
+<img width="2455" height="570" alt="image" src="https://github.com/user-attachments/assets/7ec57cb3-ba18-46c3-bc5d-3f5bb020a58e" />
+<img width="1451" height="1359" alt="image" src="https://github.com/user-attachments/assets/d1ddd294-6f3b-45ad-8bb3-7a495c753e82" />
+
+
+
+</details>
 
 <br/>
 
