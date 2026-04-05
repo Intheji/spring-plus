@@ -3,10 +3,10 @@ spring:
     name: spring-plus
 
   datasource:
-    url: jdbc:mysql://localhost:3306/plus
+    url: ${DB_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: 1222
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   jpa:
     show-sql: true
@@ -35,3 +35,12 @@ management:
         http.server.requests: true
     tags:
       application: ${spring.application.name:my-app}
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID}
+      secret-key: ${AWS_SECRET_ACCESS_KEY}
+    region:
+      static: ${AWS_REGION}
+    s3:
+      bucket: ${AWS_S3_BUCKET}
